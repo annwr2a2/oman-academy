@@ -364,16 +364,15 @@
 
         <label for="activityType">نوع المذاكرة</label>
         <select id="activityType">
-          <option value="فهم وشرح">فهم وشرح</option>
-          <option value="حل أسئلة">حل أسئلة</option>
           <option value="مراجعة سريعة">مراجعة سريعة</option>
+          <option value="فهم وشرح">فهم وشرح</option>
           <option value="تلخيص وحفظ">تلخيص وحفظ</option>
-          <option value="اختبار ذاتي">اختبار ذاتي</option>
+          <option value="حل أسئلة">حل أسئلة</option>
         </select>
 
         <div class="checks">
-          <label class="check-card"><input type="checkbox" id="isHard"> درس صعب</label>
-          <label class="check-card"><input type="checkbox" id="isLong"> درس دسم</label>
+          <label class="check-card"><input type="checkbox" id="isHard"> درس صعب +20%</label>
+          <label class="check-card"><input type="checkbox" id="isLong"> درس دسم +40%</label>
         </div>
 
         <button onclick="addLesson()">إضافة الدروس المحددة للجدول +</button>
@@ -391,7 +390,6 @@
         <select id="planType">
           <option value="daily">جدول يومي</option>
           <option value="weekly">جدول أسبوعي</option>
-          <option value="monthly">جدول شهري</option>
         </select>
 
         <div class="row">
@@ -734,10 +732,38 @@
       hint.textContent = `نظام الصف ${grade}: ${sessionText}. يتم ترتيب الدروس تلقائيًا حسب قرب الاختبار النهائي ثم صعوبة الدرس.`;
     }
 
+    function getBaseActivityMinutes(grade, activity) {
+      const timings = {
+        "5":  { "مراجعة سريعة": 10, "فهم وشرح": 20, "تلخيص وحفظ": 20, "حل أسئلة": 20 },
+        "6":  { "مراجعة سريعة": 10, "فهم وشرح": 20, "تلخيص وحفظ": 20, "حل أسئلة": 20 },
+        "7":  { "مراجعة سريعة": 10, "فهم وشرح": 25, "تلخيص وحفظ": 25, "حل أسئلة": 25 },
+        "8":  { "مراجعة سريعة": 10, "فهم وشرح": 25, "تلخيص وحفظ": 25, "حل أسئلة": 25 },
+        "9":  { "مراجعة سريعة": 15, "فهم وشرح": 30, "تلخيص وحفظ": 30, "حل أسئلة": 30 },
+        "10": { "مراجعة سريعة": 15, "فهم وشرح": 30, "تلخيص وحفظ": 30, "حل أسئلة": 30 },
+        "11": { "مراجعة سريعة": 15, "فهم وشرح": 35, "تلخيص وحفظ": 35, "حل أسئلة": 35 },
+        "12": { "مراجعة سريعة": 15, "فهم وشرح": 35, "تلخيص وحفظ": 35, "حل أسئلة": 35 }
+      };
+
+      return timings[grade]?.[activity] || 30;
+    }
+
+    function roundToNearestFive(minutes) {
+      return Math.max(10, Math.round(minutes / 5) * 5);
+    }
+
+    function getSessionDuration(grade, item) {
+      const base = getBaseActivityMinutes(grade, item.activity);
+      let multiplier = 1;
+      if (item.isHard) multiplier += 0.20;
+      if (item.isLong) multiplier += 0.40;
+      return roundToNearestFive(base * multiplier);
+    }
+
     function getSessionText(grade) {
-      if (["5", "6", "7", "8"].includes(grade)) return '25 دقيقة مذاكرة + 5 دقائق راحة';
-      if (["9", "10"].includes(grade)) return '40 دقيقة مذاكرة + 10 دقائق راحة';
-      return '55 دقيقة مذاكرة + 10 دقائق راحة';
+      if (["5", "6"].includes(grade)) return 'مراجعة سريعة 10 دقائق، وباقي الأنشطة 20 دقيقة، مع زيادة 20% للدرس الصعب و40% للدرس الدسم';
+      if (["7", "8"].includes(grade)) return 'مراجعة سريعة 10 دقائق، وباقي الأنشطة 25 دقيقة، مع زيادة 20% للدرس الصعب و40% للدرس الدسم';
+      if (["9", "10"].includes(grade)) return 'مراجعة سريعة 15 دقيقة، وباقي الأنشطة 30 دقيقة، مع زيادة 20% للدرس الصعب و40% للدرس الدسم';
+      return 'مراجعة سريعة 15 دقيقة، وباقي الأنشطة 35 دقيقة، مع زيادة 20% للدرس الصعب و40% للدرس الدسم';
     }
 
     function onSubjectChange() {
@@ -856,14 +882,11 @@
 
       if (!startTime || !endTime) return alert('حدد وقت البداية والنهاية.');
 
-      let studyMin = 50;
       let breakMin = 10;
-      if (["5", "6", "7", "8"].includes(grade)) { studyMin = 25; breakMin = 5; }
-      if (["9", "10"].includes(grade)) { studyMin = 40; breakMin = 10; }
-      if (["11", "12"].includes(grade)) { studyMin = 55; breakMin = 10; }
+      if (["5", "6", "7", "8"].includes(grade)) { breakMin = 5; }
 
-      const daysCount = planType === 'weekly' ? 7 : planType === 'monthly' ? 30 : 1;
-      const planName = planType === 'weekly' ? 'الأسبوعي' : planType === 'monthly' ? 'الشهري' : 'اليومي';
+      const daysCount = planType === 'weekly' ? 7 : 1;
+      const planName = planType === 'weekly' ? 'الأسبوعي' : 'اليومي';
       const body = document.getElementById('scheduleBody');
       body.innerHTML = '';
 
@@ -892,10 +915,7 @@
 
         while (current < end && index < sorted.length) {
           const item = sorted[index];
-          let duration = studyMin;
-          if (item.isLong) duration += 10;
-          if (item.activity === 'مراجعة سريعة') duration = Math.max(20, studyMin - 15);
-          if (item.activity === 'اختبار ذاتي') duration = studyMin;
+          let duration = getSessionDuration(grade, item);
 
           let remaining = duration;
           while (remaining > 0 && current < end) {
