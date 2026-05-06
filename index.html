@@ -13,17 +13,34 @@
 <body>
   <div class="header">
     <h1>جدول المذاكرة الذكي 📚</h1>
-    <div class="credit">منصة عمان أكاديمي | إعداد الأستاذ أنور البلوشي | 98044311</div>
+    <div class="credit">منصة عمان أكاديمي | إعداد الأستاذ أنور البلوشي | 92818606</div>
     <p>خطط مذاكرتك بذكاء حسب صفك ودروسك، مع ترتيب الأولويات وفق مواعيد الاختبارات ومراعاة أوقات الصلاة تلقائيًا</p>
   </div>
   <div class="container">
     <aside class="sidebar">
-      <div class="card"><h2>مرحبًا يا بطل 👋</h2><label for="studentName">اكتب اسمك ليظهر في خطة النجاح</label><input type="text" id="studentName" placeholder="مثال: أحمد"><div class="hint">عند الطباعة أو حفظ PDF سيظهر الاسم في أعلى الجدول.</div></div>
+      <div class="card">
+  <h2>مرحبًا يا بطل 👋</h2>
+
+  <label for="studentName">اكتب اسمك ليظهر في خطة النجاح</label>
+  <input type="text" id="studentName" placeholder="مثال: أحمد">
+
+  <div class="hint">عند الطباعة أو حفظ PDF سيظهر الاسم في أعلى الجدول.</div>
+
+  <a
+    href="https://www.youtube.com/watch?v=7uXiWE2S26w"
+    target="_blank"
+    rel="noopener"
+    class="btn-secondary"
+    style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;font-weight:800;margin-top:10px;"
+  >
+    🎥 شرح طريقة استخدام الجدول
+  </a>
+</div>
       <div class="card"><h2>1) اليوم والوقت</h2><label for="studyDate">تاريخ بداية الجدول</label><input type="date" id="studyDate"><label for="planType">نوع الجدول</label><select id="planType"><option value="daily">جدول يومي</option><option value="weekly">جدول أسبوعي</option></select><div class="row"><div><label for="startTime">البداية</label><select id="startTime" data-default-time="16:00" class="time-12"></select></div><div><label for="endTime">النهاية</label><select id="endTime" data-default-time="21:00" class="time-12"></select></div></div></div>
       <div class="card"><h2>2) الصف الدراسي</h2><label for="gradeSelect">اختر الصف</label><select id="gradeSelect"><option value="">-- اختر الصف --</option><option value="5">الصف الخامس</option><option value="6">الصف السادس</option><option value="7">الصف السابع</option><option value="8">الصف الثامن</option><option value="9">الصف التاسع</option><option value="10">الصف العاشر</option><option value="11">الصف الحادي عشر</option><option value="12">الصف الثاني عشر / دبلوم التعليم العام</option></select><div id="gradeHint" class="hint" style="display:none"></div></div>
       <div class="card" id="lessonCard" style="display:none"><h2>3) المادة والدروس</h2><label for="subjectSelect">المادة</label><select id="subjectSelect"></select><div id="examDetails" class="exam-box" style="display:none"></div><label for="lessonSelect">الدرس / الوحدة</label><div id="lessonSelect" class="lesson-checkboxes"></div><div class="hint">ضع علامة ✓ أمام كل درس تريد إضافته للمذاكرة.</div><label for="activityType">نوع المذاكرة</label><select id="activityType"><option value="مراجعة سريعة">مراجعة سريعة</option><option value="فهم وشرح">فهم وشرح</option><option value="تلخيص وحفظ">تلخيص وحفظ</option><option value="حل أسئلة">حل أسئلة</option><option value="حل امتحان نهائي">حل امتحان نهائي</option><option value="أخرى">أخرى</option></select><div class="checks"><label class="check-card"><input type="checkbox" id="isHard"> درس صعب +20%</label><label class="check-card"><input type="checkbox" id="isLong"> درس دسم +40%</label></div><button type="button" id="addLessonBtn">إضافة الدروس المحددة للجدول +</button><button type="button" class="btn-secondary" id="addAllBtn">إضافة كل دروس المادة</button><div id="selectedLessons" class="lesson-list"></div></div>
       <div class="card"><h2>4) أوقات الصلاة</h2><label class="check-card"><input type="checkbox" id="usePrayer" checked> مراعاة الصلاة داخل الجدول</label><div class="row-3"><div><label for="fajrTime">الفجر</label><select id="fajrTime" data-default-time="03:54" class="time-12"></select></div><div><label for="dhuhrTime">الظهر</label><select id="dhuhrTime" data-default-time="12:10" class="time-12"></select></div><div><label for="asrTime">العصر</label><select id="asrTime" data-default-time="15:29" class="time-12"></select></div></div><div class="row-3"><div><label for="maghribTime">المغرب</label><select id="maghribTime" data-default-time="18:55" class="time-12"></select></div><div><label for="ishaTime">العشاء</label><select id="ishaTime" data-default-time="20:16" class="time-12"></select></div><div><label for="prayerBreak">مدة الصلاة بالدقائق</label><input type="number" id="prayerBreak" min="5" value="20"></div></div><div class="hint">تتغير أوقات الصلاة تلقائيًا عند تغيير التاريخ، ويمكنك تعديلها يدويًا حسب الولاية. الجدول يوقف المذاكرة تلقائيًا عند دخول الصلاة.</div></div>
-      <div class="card"><h2>5) التوليد</h2><button type="button" id="generateBtn">توليد الجدول ✨</button><div class="actions"><button type="button" class="btn-secondary" id="printBtn">طباعة</button><button type="button" class="btn-secondary" id="pdfBtn">حفظ PDF</button><button type="button" class="btn-secondary" id="shareBtn">مشاركة الخطة</button><button type="button" class="btn-secondary" id="resetBtn">مسح الكل</button></div></div>
+      <div class="card"><h2>5) إنشاء الجدول و الطباعة</h2><button type="button" id="generateBtn">إنشاء الجدول ✨</button><div class="actions"><button type="button" class="btn-secondary" id="printBtn">طباعة</button><button type="button" class="btn-secondary" id="pdfBtn">حفظ PDF</button><button type="button" class="btn-secondary" id="shareBtn">مشاركة الخطة</button><button type="button" class="btn-secondary" id="resetBtn">مسح الكل</button></div></div>
     </aside>
     <main><div id="countdownBox" class="countdown-box" style="display:none"></div><div class="summary"><div class="stat"><b id="lessonsCount">0</b><span>عدد الدروس</span></div><div class="stat"><b id="subjectsCount">0</b><span>عدد المواد</span></div><div class="stat"><b id="studyTimeCount">0</b><span>دقائق مذاكرة</span></div><div class="stat"><b id="prayerCount">0</b><span>فواصل صلاة</span></div></div><div class="card table-card pdf-area" id="scheduleArea"><div class="table-head"><h2>خطة المذاكرة اليومية</h2><div id="ownerName" class="student-plan-owner"></div><p id="scheduleNote">أضف الدروس ثم اضغط توليد الجدول.</p></div><table><thead><tr><th>الوقت</th><th>المادة والدرس</th><th>نوع النشاط</th></tr></thead><tbody id="scheduleBody"><tr><td colspan="3" class="empty">لا توجد دروس مضافة حتى الآن</td></tr></tbody></table><div id="subjectCta" class="cta-box"></div><div id="parentNote" class="parent-note">ولي الأمر العزيز، منصة عمان أكاديمي تساعد ابنك ليس فقط في التخطيط، بل في التفوق. للتواصل ومتابعة المستوى الدراسي: 98044311</div></div></main>
   </div>
